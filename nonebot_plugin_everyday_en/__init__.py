@@ -174,7 +174,7 @@ async def post_scheduler():
             await bot.send_group_msg(group_id=int(group_id), message=msg)
             await asyncio.sleep(delay)
         except ActionFailed:
-            logger.info(f"定时发送每日一句到{group_id}失败，可能是风控或")
+            logger.warning(f"定时发送每日一句到 {group_id} 失败，可能是风控或机器人不在该群聊")
 
 
 if scheduler:
