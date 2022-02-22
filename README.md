@@ -39,7 +39,7 @@
 - 通过 pip 或 nb-cli 安装
 
 ```shell
-pip install -U nonebot-plugin-setu-now
+pip install nonebot-plugin-everyday-en
 ```
 
 - 并记得在您的bot.py中载入插件
