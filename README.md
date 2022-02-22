@@ -15,11 +15,11 @@
   <a href="https://raw.githubusercontent.com/MelodyYuuka/nonebot_plugin_everyday_en/master/LICENSE">
     <img src="https://img.shields.io/github/license/MelodyYuuka/nonebot_plugin_everyday_en" alt="license">
   </a>
-<!--
+
   <a href="https://pypi.python.org/pypi/nonebot_plugin_everyday_en">
     <img src="https://img.shields.io/pypi/v/nonebot_plugin_everyday_en" alt="pypi">
   </a>
---!>
+
   <a href="https://onebot.dev">
     <img src="https://img.shields.io/badge/OneBot-11-black" alt="license">
   </a>
@@ -34,4 +34,59 @@
   
 </p>
 
-## 使用方式
+## 安装载入
+
+- 通过 pip 或 nb-cli 安装
+
+```
+pip install -U nonebot-plugin-setu-now
+```
+
+- 并记得在您的bot.py中载入
+
+```python
+nonebot.load_plugin("nonebot_plugin_everyday_en")
+```
+
+- 如需使用定时发送功能，还需安装软依赖 [nonebot_plugin_apscheduler](https://github.com/nonebot/plugin-apscheduler)
+```
+pip install nonebot-plugin-apscheduler
+```
+
+## 指令
+- 每日一句: 获取今天的句子
+  - 每日一句[日期]: 获取指定日期的句子
+    > 日期格式为 YYYY-MM-DD , 例如 2020-01-08
+- 开启/关闭定时每日一句: 开启/关闭本群定时发送[SUPERUSER]
+  - 开启/关闭定时每日一句[群号]: 开启/关闭指定群定时发送[SUPERUSER]
+
+## 配置项
+
+配置方式：直接在 NoneBot 全局配置文件中添加以下配置项即可。
+
+🟢 默认配置为每日 8:00 发送
+### everyday_post_hour
+- 类型: int
+- 默认: 8
+- 说明: 每日定时发送的小时，不需要在数字前加0
+>```python
+>EVERYDAY_POST_HOUR=8
+>```
+
+### everyday_post_minute
+- 类型: int
+- 默认: 0
+- 说明: 每日定时发送的分钟，不需要在数字前加0
+>```python
+>EVERYDAY_POST_MINUTE=0
+>```
+
+### everyday_delay
+- 类型: float
+- 默认: 0.5
+- 说明: 定时发送时各群间发送的延迟，以免腾讯风控导致发送失败
+>```python
+>EVERYDAY_DELAY=0.5
+>```
+
+
