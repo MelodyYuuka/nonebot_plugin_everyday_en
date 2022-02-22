@@ -5,12 +5,13 @@ from nonebot.adapters.onebot.v11 import (
     MessageSegment,
     Message,
     GroupMessageEvent,
+    ActionFailed
 )
 from nonebot.params import Matcher, RegexGroup
 from nonebot.log import logger
 from nonebot.permission import SUPERUSER
 from nonebot import require, get_driver, get_bot
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple
 from pathlib import Path
 from datetime import date
 from textwrap import dedent
@@ -28,7 +29,7 @@ except ImportError:
 __help_plugin_name__ = "每日一句"
 __help_version__ = "1.0"
 __usage__ = dedent(
-    """每日一句 → 获取每日一句
+    """每日一句 → 获取今天的句子
        每日一句[日期] → 获取特定日期的句子
        [日期]形如YYYY-MM-DD, 例如2020-01-08
        开启/关闭定时每日一句 → 开启/关闭本群定时发送[SUPERUSER]
@@ -104,7 +105,10 @@ async def _(
     if isinstance(event, GroupMessageEvent):
         group_id = args[1] if args[1] else str(event.group_id)
     else:
-        group_id = args[1]
+        if args[1]:
+            group_id = args[1]
+        else:
+            await matcher.finish("私聊开关需要输入指定群号")
     if mode == "开启":
         if group_id in CONFIG["opened_groups"]:
             await matcher.finish("该群已经开启，无需重复开启")
@@ -119,7 +123,7 @@ async def _(
         async with aiofiles.open(config_path, "w", encoding="utf8") as f:
             await f.write(json.dumps(CONFIG, ensure_ascii=False, indent=4))
     await matcher.finish(
-        f"已成功{mode}{(await bot.get_group_info(group_id=int(group_id)))['group_name']}({group_id})每日一句"
+        f"已成功{mode}{group_id}的每日一句"
     )
 
 
@@ -162,10 +166,15 @@ async def post_scheduler():
     record = MessageSegment.record(data["tts"])
     msg = format_data(data)
     bot: Bot = get_bot()
+    delay = env_config.everyday_delay * 0.5
     for group_id in CONFIG["opened_groups"]:
-        await bot.send_group_msg(group_id=int(group_id), message=record)
-        await bot.send_group_msg(group_id=int(group_id), message=msg)
-        await asyncio.sleep(0.2)
+        try:
+            await bot.send_group_msg(group_id=int(group_id), message=record)
+            await asyncio.sleep(delay)
+            await bot.send_group_msg(group_id=int(group_id), message=msg)
+            await asyncio.sleep(delay)
+        except ActionFailed:
+            logger.info(f"定时发送每日一句到{group_id}失败，可能是风控或")
 
 
 if scheduler:
