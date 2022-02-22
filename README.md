@@ -38,18 +38,18 @@
 
 - 通过 pip 或 nb-cli 安装
 
-```
+```shell
 pip install -U nonebot-plugin-setu-now
 ```
 
-- 并记得在您的bot.py中载入
+- 并记得在您的bot.py中载入插件
 
 ```python
 nonebot.load_plugin("nonebot_plugin_everyday_en")
 ```
 
 - 如需使用定时发送功能，还需安装软依赖 [nonebot_plugin_apscheduler](https://github.com/nonebot/plugin-apscheduler)
-```
+```shell
 pip install nonebot-plugin-apscheduler
 ```
 
@@ -57,8 +57,11 @@ pip install nonebot-plugin-apscheduler
 - 每日一句: 获取今天的句子
   - 每日一句[日期]: 获取指定日期的句子
     > 日期格式为 YYYY-MM-DD , 例如 2020-01-08
-- 开启/关闭定时每日一句: 开启/关闭本群定时发送[SUPERUSER]
-  - 开启/关闭定时每日一句[群号]: 开启/关闭指定群定时发送[SUPERUSER]
+
+- 开启/关闭定时每日一句: 开启/关闭本群定时发送 **[SUPERUSER]**
+  - 开启/关闭定时每日一句[群号]: 开启/关闭指定群定时发送 **[SUPERUSER]**
+
+- 查看定时每日一句列表: 列出开启定时发送的群聊 **[SUPERUSER]**
 
 ## 配置项
 
@@ -89,4 +92,6 @@ pip install nonebot-plugin-apscheduler
 >EVERYDAY_DELAY=0.5
 >```
 
+## 开源许可
 
+- 本插件使用 `MIT` 许可证开源
