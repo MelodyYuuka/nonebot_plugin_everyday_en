@@ -89,7 +89,7 @@ NoneBot 配置相关教程详见 [配置 | NoneBot](https://v2.nonebot.dev/docs/
 ### everyday_delay
 - 类型: float
 - 默认: 0.5
-- 说明: 定时发送时各群间发送的延迟，以免腾讯风控导致发送失败
+- 说明: 定时发送时各群间发送的延迟秒数，以免腾讯风控导致发送失败
 >```python
 >EVERYDAY_DELAY=0.5
 >```
@@ -102,8 +102,8 @@ NoneBot 配置相关教程详见 [配置 | NoneBot](https://v2.nonebot.dev/docs/
 
 ## 常见问题
 
-### `Q:为什么定时发送功能某些群无法收到`
-- A:检查日志，频繁发送消息可能导致腾讯风控，可通过设置[`everyday_delay`](https://github.com/MelodyYuuka/nonebot_plugin_everyday_en#everyday_delay)配置项设置发送延迟来缓解
+### `Q: 为什么定时发送每日一句某些群无法收到`
+- A: 检查日志，频繁发送消息可能导致腾讯风控，可通过设置[`everyday_delay`](https://github.com/MelodyYuuka/nonebot_plugin_everyday_en#everyday_delay)配置项设置发送延迟来缓解
 
 ## 开源许可
 
