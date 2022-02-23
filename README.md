@@ -94,6 +94,12 @@ NoneBot 配置相关教程详见 [配置 | NoneBot](https://v2.nonebot.dev/docs/
 >EVERYDAY_DELAY=0.5
 >```
 
+## 软依赖
+- [`nonebot_plugin_apscheduler`](https://github.com/nonebot/plugin-apscheduler): 使用定时发送功能
+
+- [`nonebot-plugin-help`](https://github.com/XZhouQD/nonebot-plugin-help): 在群内查看帮助文档
+  - 也可自行解析 `__help_plugin_name__` , `__help_version__` , `__usage__`来接入您自己的帮助插件
+
 ## 常见问题
 
 ### `Q:为什么定时发送功能某些群无法收到`
