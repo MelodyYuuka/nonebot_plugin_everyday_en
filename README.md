@@ -48,7 +48,7 @@ pip install nonebot-plugin-everyday-en
 nonebot.load_plugin("nonebot_plugin_everyday_en")
 ```
 
-- 如需使用定时发送功能，还需安装软依赖 [nonebot_plugin_apscheduler](https://github.com/nonebot/plugin-apscheduler)
+- 如需使用定时发送功能，还需安装软依赖 [nonebot-plugin-apscheduler](https://github.com/nonebot/plugin-apscheduler)
 ```shell
 pip install nonebot-plugin-apscheduler
 ```
@@ -95,7 +95,7 @@ NoneBot 配置相关教程详见 [配置 | NoneBot](https://v2.nonebot.dev/docs/
 >```
 
 ## 软依赖
-- [`nonebot_plugin_apscheduler`](https://github.com/nonebot/plugin-apscheduler): 使用定时发送功能
+- [`nonebot-plugin-apscheduler`](https://github.com/nonebot/plugin-apscheduler): 使用定时发送功能
 
 - [`nonebot-plugin-help`](https://github.com/XZhouQD/nonebot-plugin-help): 在群内查看帮助文档
   - 也可自行解析 `__help_plugin_name__` , `__help_version__` , `__usage__`来接入您自己的帮助插件
