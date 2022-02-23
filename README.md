@@ -42,7 +42,7 @@
 pip install nonebot-plugin-everyday-en
 ```
 
-- 并记得在您的bot.py中载入插件
+- 并在您的bot.py中载入插件
 
 ```python
 nonebot.load_plugin("nonebot_plugin_everyday_en")
@@ -66,6 +66,8 @@ pip install nonebot-plugin-apscheduler
 ## 配置项
 
 配置方式：直接在 NoneBot 全局配置文件中添加以下配置项即可。
+
+NoneBot 配置相关教程详见 [配置 | NoneBot](https://v2.nonebot.dev/docs/tutorial/configuration)
 
 🟢 默认配置为每日 8:00 发送
 ### everyday_post_hour
@@ -91,6 +93,11 @@ pip install nonebot-plugin-apscheduler
 >```python
 >EVERYDAY_DELAY=0.5
 >```
+
+## 常见问题
+
+### `Q:为什么定时发送功能某些群无法收到`
+- A:检查日志，频繁发送消息可能导致腾讯风控，可通过设置[`everyday_delay`](https://github.com/MelodyYuuka/nonebot_plugin_everyday_en#everyday_delay)配置项设置发送延迟来缓解
 
 ## 开源许可
 
