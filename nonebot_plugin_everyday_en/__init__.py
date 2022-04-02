@@ -173,6 +173,7 @@ async def post_scheduler():
     msg = format_data(data)
     bot: Bot = get_bot()
     delay = env_config.everyday_delay * 0.5
+    record_error_flag = True
     for group_id in CONFIG["opened_groups"]:
         failed_record = True
         try:
@@ -185,8 +186,9 @@ async def post_scheduler():
         except ActionFailed as e:
             logger.warning(f"定时发送每日一句到 {group_id} 失败，可能是风控或机器人不在该群聊 {repr(e)}")
         else:
-            if failed_record:
+            if failed_record and record_error_flag:
                 logger.warning(f"{no_ffmpeg_error}")
+                record_error_flag = False
         await asyncio.sleep(delay)
 
 
