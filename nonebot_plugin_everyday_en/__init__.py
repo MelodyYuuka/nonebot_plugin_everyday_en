@@ -5,7 +5,7 @@ from nonebot.adapters.onebot.v11 import (
     MessageSegment,
     Message,
     GroupMessageEvent,
-    ActionFailed
+    ActionFailed,
 )
 from nonebot.params import Matcher, RegexGroup
 from nonebot.log import logger
@@ -14,7 +14,6 @@ from nonebot import require, get_driver, get_bot
 from typing import Dict, List, Optional, Tuple
 from pathlib import Path
 from datetime import date
-from textwrap import dedent
 import asyncio
 import aiofiles
 import httpx
@@ -28,14 +27,15 @@ except ImportError:
 
 __help_plugin_name__ = "每日一句"
 __help_version__ = "1.0"
-__usage__ = dedent(
-    """每日一句 → 获取今天的句子
-       每日一句[日期] → 获取特定日期的句子
-       [日期]形如YYYY-MM-DD, 例如2020-01-08
-       开启/关闭定时每日一句 → 开启/关闭本群定时发送[SUPERUSER]
-       开启/关闭定时每日一句[群号] → 开关指定群定时发送[SUPERUSER]
-       查看定时每日一句列表 → 列出开启定时发送的群聊[SUPERUSER]"""
-)
+__usage__ = """
+每日一句 → 获取今天的句子
+每日一句[日期] → 获取特定日期的句子
+[日期]形如YYYY-MM-DD, 例如2020-01-08
+开启/关闭定时每日一句 → 开启/关闭本群定时发送[SUPERUSER]
+开启/关闭定时每日一句[群号] → 开关指定群定时发送[SUPERUSER]
+查看定时每日一句列表 → 列出开启定时发送的群聊[SUPERUSER]
+""".strip()
+
 
 env_config = Config(**get_driver().config.dict())
 
@@ -51,7 +51,7 @@ else:
 
 try:
     scheduler = require("nonebot_plugin_apscheduler").scheduler
-except BaseException:
+except Exception:
     scheduler = None
 
 logger.opt(colors=True).info(
@@ -65,10 +65,15 @@ turn_matcher = on_regex(r"^(开启|关闭)定时每日一句([0-9]*)$", priority
 list_matcher = on_regex(r"^查看定时每日一句列表$", priority=999, permission=SUPERUSER)
 
 
-data_cache: Dict = None
-cache_time: date = None
+data_cache: Optional[Dict] = None
+cache_time: Optional[date] = None
 
 lock = asyncio.Lock()
+
+no_ffmpeg_error = (
+    "发送语音失败，可能是风控或未安装FFmpeg，详见 "
+    "https://github.com/MelodyYuuka/nonebot_plugin_everyday_en#q-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%B2%A1%E6%9C%89%E8%AF%AD%E9%9F%B3"
+)
 
 
 @everyday_en_matcher.handle()
@@ -82,12 +87,15 @@ async def _(
     if cache_time != date.today() or (not data_cache) or args[0]:
         try:
             data = await get_data(query_date)
-        except BaseException as e:
+        except Exception as e:
             logger.exception(e)
             await matcher.finish("发生了问题，可能是输入了错误日期或发生了网络错误")
     else:
         data = data_cache
-    await matcher.send(MessageSegment.record(data["tts"]))
+    try:
+        await matcher.send(MessageSegment.record(data["tts"]))
+    except ActionFailed as e:
+        logger.warning(f"{repr(e)}: {no_ffmpeg_error}")
     msg = format_data(data)
     await matcher.finish(msg)
 
@@ -122,9 +130,7 @@ async def _(
     async with lock:
         async with aiofiles.open(config_path, "w", encoding="utf8") as f:
             await f.write(json.dumps(CONFIG, ensure_ascii=False, indent=4))
-    await matcher.finish(
-        f"已成功{mode}{group_id}的每日一句"
-    )
+    await matcher.finish(f"已成功{mode}{group_id}的每日一句")
 
 
 @list_matcher.handle()
@@ -168,13 +174,20 @@ async def post_scheduler():
     bot: Bot = get_bot()
     delay = env_config.everyday_delay * 0.5
     for group_id in CONFIG["opened_groups"]:
+        failed_record = True
         try:
             await bot.send_group_msg(group_id=int(group_id), message=record)
-            await asyncio.sleep(delay)
-            await bot.send_group_msg(group_id=int(group_id), message=msg)
-            await asyncio.sleep(delay)
         except ActionFailed:
-            logger.warning(f"定时发送每日一句到 {group_id} 失败，可能是风控或机器人不在该群聊")
+            failed_record = False
+        await asyncio.sleep(delay)
+        try:
+            await bot.send_group_msg(group_id=int(group_id), message=msg)
+        except ActionFailed as e:
+            logger.warning(f"定时发送每日一句到 {group_id} 失败，可能是风控或机器人不在该群聊 {repr(e)}")
+        else:
+            if failed_record:
+                logger.warning(f"{repr(e)}: {no_ffmpeg_error}")
+        await asyncio.sleep(delay)
 
 
 if scheduler:
