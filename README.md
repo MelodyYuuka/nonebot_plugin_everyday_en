@@ -102,7 +102,10 @@ NoneBot 配置相关教程详见 [配置 | NoneBot](https://v2.nonebot.dev/docs/
 
 ## 常见问题
 
-### `Q: 为什么定时发送每日一句某些群无法收到`
+### `Q: 为什么没有语音？`
+- A: 如果你使用的是go-cqhttp，那么你需要安装FFmpeg来使用语音功能，详见[`安装 ffmpeg`](https://docs.go-cqhttp.org/guide/quick_start.html#%E5%AE%89%E8%A3%85-ffmpeg)
+
+### `Q: 为什么定时发送每日一句某些群无法收到？`
 - A: 检查日志，频繁发送消息可能导致腾讯风控，可通过设置[`everyday_delay`](https://github.com/MelodyYuuka/nonebot_plugin_everyday_en#everyday_delay)配置项设置发送延迟来缓解
 
 ## 开源许可
