@@ -186,7 +186,7 @@ async def post_scheduler():
             logger.warning(f"定时发送每日一句到 {group_id} 失败，可能是风控或机器人不在该群聊 {repr(e)}")
         else:
             if failed_record:
-                logger.warning(f"{repr(e)}: {no_ffmpeg_error}")
+                logger.warning(f"{no_ffmpeg_error}")
         await asyncio.sleep(delay)
 
 
