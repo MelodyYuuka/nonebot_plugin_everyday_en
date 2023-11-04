@@ -6,7 +6,7 @@
   
 # nonebot_plugin_everyday_en
 
-🍥适用于 [Nonebot2](https://github.com/nonebot/nonebot2) 的每日一句插件🍥
+🐝适用于 [Nonebot2](https://github.com/nonebot/nonebot2) 的每日一句插件🐝
   
 </div>
 
